@@ -4,7 +4,7 @@ import { Navbar, HomePage, Profile, SignIn, Chat } from './components/index'
 
 import { authContext } from './components/context/useContext';
 
-import { Navigate, useRouteError } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import React from 'react';
 
@@ -17,14 +17,15 @@ import {
 
 export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   const auth = authContext();
+  // const location = useLocation();
 
-  return (
-    auth.isAuthenticated ? (
-      children
-    ) : (
-      <Navigate to="/" replace />
-    )
-  )
+  console.log("here is : " + auth.isAuthenticated);
+
+  if (!auth.isAuthenticated)
+    return <Navigate to="/" replace />;
+
+
+  return ( children );
 }
 
 // function NotFound() {
@@ -45,8 +46,9 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
 const App = () => {
   const authApp = authContext();
 
-  console.log("auth: " + authApp.isAuthenticated);
 
+
+  console.log("in the app: " + authApp.isAuthenticated);
   return (
     <div className=' h-[1020px]'>
       <div className=' w-full flex absolute top-1/2 -translate-y-1/2 max-sm:top-0 max-sm:-translate-y-0'>
@@ -58,11 +60,13 @@ const App = () => {
         
         {authApp.isAuthenticated && <Navbar />}
 
+          {!authApp.isAuthenticated && <SignIn />
+          }
         <Routes>
-          {!authApp.isAuthenticated ? <Route path='/' element={(<SignIn />)}/> : <Route path='/Home' element={<HomePage />}/> }
-          
-          {/* <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/> */}
+          <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
           <Route path='/Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
+          
+          
         </Routes>
       </div>
     </div>

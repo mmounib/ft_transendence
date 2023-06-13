@@ -116,19 +116,24 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                     console.log("No Tokeeen");
                     // Need to redirect to sign in page
                     setIsAuthenticated(false);
-                    <Navigate to="/" replace />
+                    // <Navigate to="/" replace />
+                    // console.log("here in accesstoken");
+
                     return ;
                 }
-                // axios.defaults.headers.common['Cookie'] = accessToken;
-                const response = await axios.get('http://localhost:3000/auth/user', {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
 
-                console.log(response.data.user);
-                
-                setIsAuthenticated(true);
+                // axios.defaults.headers.common['Cookie'] = accessToken;
+                else {
+                    const response = await axios.get('http://localhost:3000/auth/user', {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`
+                        }
+                    });
+
+                    console.log(response.data.user);
+                    
+                    setIsAuthenticated(true);
+                }
                 // <Navigate to="/Home" replace />
                 // if (response.data.status === 200)
                 // {
