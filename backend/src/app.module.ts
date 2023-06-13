@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as cookieParser from 'cookie-parser';
+// import * as cookieParser from 'cookie-parser';
 import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, LiveGames, MatchHistory, Notification, UsersMuted } from 'src/entities';
 import User from 'src/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
@@ -32,10 +32,4 @@ const ENV_PATH : string = './src/.env';
 })
 
 
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(cookieParser())
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

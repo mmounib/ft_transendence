@@ -12,7 +12,7 @@ const Friends = () => {
 
   const [IsOpen, setOpen] = useState(false);
   return (
-    <div className="flex flex-col top_1 w-[300px] text-gray-400 max-md:w-[95%]">
+    <div className="flex flex-col top_1 w-[300px] text-gray-400 max-md:w-[95%] bg-red-700">
       <h1 className="text-2xl p-2">Friends List</h1>
       
       <div className="flex flex-col">

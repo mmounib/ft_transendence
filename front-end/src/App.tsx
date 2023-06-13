@@ -18,7 +18,6 @@ import {
 export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   const auth = authContext();
 
-
   return (
     auth.isAuthenticated ? (
       children
@@ -28,23 +27,25 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   )
 }
 
-function NotFound() {
-  const error: any = useRouteError();
+// function NotFound() {
+//   const error: any = useRouteError();
 
-  return (
-    <div className='text-2xl'>
-      <h1 className='text-center'>Oops!</h1>
-      <p className='text-center'>Sorry, an unexpected error has occurred.</p>
-      <p>
-        <i>{error.statusText || error.message}</i>
-      </p>
-    </div>
-  );
-}
+//   return (
+//     <div className='text-2xl text-white'>
+//       <h1 className='text-center'>Oops!</h1>
+//       <p className='text-center'>Sorry, an unexpected error has occurred.</p>
+//       <p>
+//         <i>{error.statusText || error.message}</i>
+//       </p>
+//     </div>
+//   );
+// }
 
 
 const App = () => {
   const authApp = authContext();
+
+  console.log("auth: " + authApp.isAuthenticated);
 
   return (
     <div className=' h-[1020px]'>
@@ -54,15 +55,14 @@ const App = () => {
         <Routes>
           <Route path='/' element={(<Chat />)}/>
         </Routes> */}
-
+        
         {authApp.isAuthenticated && <Navbar />}
 
         <Routes>
-          {!authApp.isAuthenticated ? <Route path='/' element={(<SignIn />)}/> : <Route path='/Home' element={(<HomePage />)}/> }
+          {!authApp.isAuthenticated ? <Route path='/' element={(<SignIn />)}/> : <Route path='/Home' element={<HomePage />}/> }
           
-          <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+          {/* <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/> */}
           <Route path='/Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
-          <Route path='*' element={(<NotFound />)}/>
         </Routes>
       </div>
     </div>
