@@ -1,7 +1,7 @@
 // import { useState, useEffect, useContext } from 'react'
+// import { Outlet, redirect } from 'react-router-dom';
 
 import { Navbar, HomePage, Profile, SignIn, Chat } from './components/index'
-import { Outlet, redirect } from 'react-router-dom';
 import { authContext } from './components/context/useContext';
 
 import { Navigate } from "react-router-dom";
@@ -17,9 +17,7 @@ import {
 
 export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   const auth = authContext();
-  // const location = useLocation();
 
-  console.log("here is : " + auth.isAuthenticated);
 
   if (!auth.isAuthenticated)
     return <Navigate to="/" replace />;
@@ -44,20 +42,13 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
 
 
 const App = () => {
-  console.log("first");
   const authApp = authContext();
 
-  // if (authApp.isAuthenticated)
-  //   return redirect("/Home");
-  console.log("in the app: " + authApp.isAuthenticated);
+  console.log("Name is :  " + authApp.user?.username);
+
   return (
     <div className=' h-[1020px]'>
       <div className=' w-full flex absolute top-1/2 -translate-y-1/2 max-sm:top-0 max-sm:-translate-y-0'>
-
-        {/* <Navbar />
-        <Routes>
-          <Route path='/' element={(<Chat />)}/>
-        </Routes> */}
         
         {authApp.isAuthenticated && <Navbar />}
 

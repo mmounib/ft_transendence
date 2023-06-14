@@ -6,10 +6,15 @@ import Achievements from './Achievements'
 import Friends from './Friends'
 import ResultsMatch from './ResultsMatch'
 
+import { authContext } from '../context/useContext';
+
 // import img from '../../assets/backround.jpg'
 
 
 const Profile = () => {
+  const authApp = authContext();
+
+
   return (
     <div className=" home flex flex-col bg-profile-bg bg-cover bg-center drop-shadow-sm rounded-[10px] max-sm:rounded-none w-[80%] mx-auto max-w-[1400px] h-[70vh] max-sm:w-[100vw] max-md:w-[95%] max-md:h-[90vh] max-sm:h-[1200px]">
       <div className="flex text-white mt-14 mx-8 justify-between max-md:flex-col max-md:mt-8 max-sm:mt-14">
@@ -19,8 +24,8 @@ const Profile = () => {
             <AccountIcon size={140} className='max-sm:w-[100px]'/>
             <div className=" ml-8 flex flex-col text-gray-400 text-sm">
               <span className='max-sm:hidden'>Welcome</span>
-              <h1 className='text-4xl m-1 pl-4 text-white max-sm:text-2xl max-sm:pl-2'>LoginName</h1>
-              <p className='max-sm:hidden'>Hey, Dude! how are you</p>
+              <h1 className='text-4xl m-1 pl-4 text-white max-sm:text-2xl max-sm:pl-2'>{authApp.user?.username}</h1>
+              <p className='max-sm:hidden'>Hey, {authApp.user?.username} ! how are you doing</p>
             </div>
           </div>
           <div className="block mt-3 ml-2 max-md:ml-auto">

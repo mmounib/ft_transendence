@@ -1,25 +1,40 @@
 import React from "react";
 import axios from "axios";
 import { createContext, useState, useEffect, useContext } from "react";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 import Cookies from 'js-cookie';
 
 
+interface User {
+    id: number;
+    username: string;
+    avatar: string;
+    wins: number;
+    loss: number;
+    winrate: number;
+    two_factors_enabled: string;
+    intraId: number
+    // Add any other relevant user information
+}
+
 interface AuthContextType {
-    checkAuth: () => Promise<void>;
+    // checkAuth: () => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
     refreshAccessToken: () => Promise<void>;
+    user: User | null;
 }
+
   
 const AuthContext = createContext<AuthContextType>({
-    checkAuth: () => Promise.resolve(),
+    // checkAuth: () => Promise.resolve(),
     logout: () => {},
     isAuthenticated: false,
-    refreshAccessToken: () => Promise.resolve()
+    refreshAccessToken: () => Promise.resolve(),
+    user: null,
 });
 
 // const AuthContext = createContext({});
@@ -29,8 +44,10 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     const [accessToken, setAccessToken] = useState<any | null>(null);
     const [refreshToken, setRefreshToken] = useState<any | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
 
-    const [cookie, setCookie, removeCookie] = useCookies(["accessTokenCookie", "refreshTokenCookie"]);
+
+    // const [cookie, setCookie, removeCookie] = useCookies(["accessTokenCookie", "refreshTokenCookie"]);
 
     // const navigate = useNavigate();
 
@@ -46,37 +63,10 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             
             setAccessToken(newAccessToken);
 
-            setCookie("accessTokenCookie", accessToken, { path: '/', httpOnly: true});
+            // setCookie("accessTokenCookie", accessToken, { path: '/', httpOnly: true});
 
         } catch (error) {
             ///////// if the refresh token has expired... // we need to do something /////////////
-        }
-    };
-
-
-    
-    const checkAuth = async () => {
-        try {
-            const responseData = await axios.get("http://localhost:3000/auth/intra");
-            const { tokens, userInfo } = responseData.data;
-            
-            // Need To Set UserInfo ` avatar, name, wins, losses ... `
-
-            setAccessToken(tokens.access_token);
-            setRefreshToken(tokens.refresh_token);
-            setIsAuthenticated(true);
-
-            console.log(userInfo);
-            
-
-            setCookie("accessTokenCookie", tokens.access_token, { path: '/', httpOnly: true});
-
-            setCookie("refreshTokenCookie", tokens.refresh_token, { path: '/', httpOnly: true});
-
-            
-            ////////// don't know if i need to regenerate the same process all over again or not  /////
-
-        } catch (error) {
         }
     };
 
@@ -94,8 +84,8 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
             console.log(res);
 
-            removeCookie('accessTokenCookie', { path: '/' });
-            removeCookie('refreshTokenCookie', { path: '/' });
+            // removeCookie('accessTokenCookie', { path: '/' });
+            // removeCookie('refreshTokenCookie', { path: '/' });
     
             setIsAuthenticated(false);
         } catch (error) {
@@ -106,18 +96,19 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     useEffect( () => {
         const checkAuthentication = async () => {
             try {
-                // console.log(document.cookie);
-                // const jsonString = '{"name": "John", "age": 30}';
-                const accessToken = Cookies.get('access_token');
-                const refreshToken = Cookies.get('refresh_token');
+                const access_Token = Cookies.get('access_token');
+                const refresh_Token = Cookies.get('refresh_token');
+                
+                setAccessToken(access_Token)
+                setRefreshToken(refresh_Token);
 
-                if (!accessToken)
+                
+                console.log(accessToken);
+                if (!access_Token)
                 {
                     console.log("No Tokeeen");
                     // Need to redirect to sign in page
                     setIsAuthenticated(false);
-                    // <Navigate to="/" replace />
-                    // console.log("here in accesstoken");
 
                     return ;
                 }
@@ -126,22 +117,14 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 else {
                     const response = await axios.get('http://localhost:3000/auth/user', {
                         headers: {
-                            Authorization: `Bearer ${accessToken}`
+                            Authorization: `Bearer ${access_Token}`
                         }
                     });
-
-                    // console.log(response.data.user);
+                    setUser(response.data.user);
+                    // const userData = response.data.user;
                     
                     setIsAuthenticated(true);
                 }
-                // <Navigate to="/Home" replace />
-                // if (response.data.status === 200)
-                // {
-                //     setIsAuthenticated(true);
-                // }
-                // else if (response.data.status === 401) {
-                //     refreshAccessToken();
-                // }
             } catch (error: any) {
                 // don't know what to do in here
             }
@@ -151,7 +134,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }, []);
     
     return (
-        <AuthContext.Provider value={{ checkAuth, logout, isAuthenticated, refreshAccessToken }}>
+        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user}}>
             {children}
         </AuthContext.Provider>
     )
