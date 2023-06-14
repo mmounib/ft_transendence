@@ -34,6 +34,6 @@ export class AuthController{
         const tokens = await this.authService.authenticateUser(req.user);
         res.cookie('access_token', tokens['access_token']);
         res.cookie('refresh_token', tokens['refresh_token']);
-        res.redirect("http://localhost:5000/Home");
+        res.redirect("http://localhost:5000/"); 
     }
 }

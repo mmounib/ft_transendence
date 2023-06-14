@@ -130,7 +130,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                         }
                     });
 
-                    console.log(response.data.user);
+                    // console.log(response.data.user);
                     
                     setIsAuthenticated(true);
                 }

@@ -1,7 +1,7 @@
 // import { useState, useEffect, useContext } from 'react'
 
 import { Navbar, HomePage, Profile, SignIn, Chat } from './components/index'
-
+import { Outlet, redirect } from 'react-router-dom';
 import { authContext } from './components/context/useContext';
 
 import { Navigate } from "react-router-dom";
@@ -44,10 +44,11 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
 
 
 const App = () => {
+  console.log("first");
   const authApp = authContext();
 
-
-
+  // if (authApp.isAuthenticated)
+  //   return redirect("/Home");
   console.log("in the app: " + authApp.isAuthenticated);
   return (
     <div className=' h-[1020px]'>
@@ -63,9 +64,12 @@ const App = () => {
           {!authApp.isAuthenticated && <SignIn />
           }
         <Routes>
-          <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
-          <Route path='/Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
-          
+          <Route path='/' >
+            <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+            <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+            <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
+            <Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
+          </Route>
           
         </Routes>
       </div>
